@@ -14,7 +14,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        return Task::latest()->get();
     }
 
     /**
@@ -22,9 +22,13 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+//	$this->validate($request, [
+//		'body' => 'required|max:500'
+//	]);
+//
+//	return Task::create(['body' => request('body')]);
     }
 
     /**
@@ -35,7 +39,11 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+                'body' => 'required|max:500'
+        ]);
+
+        return Task::create(['body' => request('body')]);
     }
 
     /**
@@ -78,8 +86,10 @@ class TaskController extends Controller
      * @param  \App\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Task $task)
+    public function destroy($id)
     {
-        //
+	    $task = Task::findorFail($id);
+	    $task->delete();
+	    return 204;
     }
 }
